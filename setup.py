@@ -16,10 +16,10 @@ setuptools.setup(
     url="https://github.com/ltphotonics/lightrig",
     author="Light Trace Photonics Ltd",
     author_email="contact@ltphotonics.co.uk",
-    py_modules=["lightrig","viewer.py"],
+    py_modules=["lightrig","viewer"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
     ],
-    install_requires=["libusb", "pyvisa-py", "pyusb", "pyserial", "qontrol", "numpy", "tkinter", "gdspy"],
+    install_requires=["libusb", "pyvisa-py", "pyusb", "pyserial", "qontrol", "numpy", "tkinter", "gdspy", "Pillow"],
 )

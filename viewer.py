@@ -1,11 +1,9 @@
-######################################################################
-#                                                                    #
-#  Copyright 2023 Light Trace Photonics Ltd.                         ##
-#                                                                    #
-######################################################################
-
 """
-Classes and functions for the visualization of the LightRig in action.
+Control code for Light Trace Photonics LightRig GUI.
+
+This module lets you run a GUI to control the LightRig.
+
+(c) 2023 Light Trace Photonics Ltd.
 """
 
 from __future__ import division
@@ -81,15 +79,15 @@ class LayoutViewer(tkinter.Frame, lightrig.LightRig):
     Parameters
     ----------
     gds_png_path : string
-        path to a png of the GDS with one pixel = 1um^2
-    pattern : int
-        frame rate that the gui reloads (ms)
-    background : string
-        Canvas background color in the format ``#rrggbb``.
+        path to a png of the GDS with one pixel = 1um^2, orientated such that X runs west to east and Y runs north to south.
+    frame_rate: integer
+        rate at which the gds viewer refreshes (ms), if the gds is large, increase this number to prevent GUI from freezing.
     width : integer
         Horizontal size of the viewer canvas.
     height : integer
         Vertical size of the viewer canvas.
+    *args :
+        All variables of lightrig.LightRig for connecting to tech
 
     """
 
@@ -97,7 +95,6 @@ class LayoutViewer(tkinter.Frame, lightrig.LightRig):
         self,
         gds_png_path,
         frame_rate=1000,
-        background="#202020",
         width=1200,
         height=2000,
         *args, **kwargs
@@ -106,16 +103,20 @@ class LayoutViewer(tkinter.Frame, lightrig.LightRig):
         lightrig.LightRig.__init__(self, *args, **kwargs)
 
         # Frame rate in ms
-        self.frame_rate = frame_rate
-        self.gds_png_path = gds_png_path
-        self.last = ''
+        self.frame_rate = frame_rate                      # Refresh rate for the GUI gds viewer
+        self.gds_png_path = gds_png_path                  # Relative or absolute path to PNG of gds being tested
+        self.last = ''                                    # Internal variable to handle printing to the GUI
 
         # Red dot & window settings
-        self.window_x = 1200 # Window size around red dot
-        self.window_y = 600
-        self.d = 5 # Red dot diameter
+        self.window_x = 1200                              # Window X size around red dot [um]
+        self.window_y = 600                               # Window Y size around red dot [um]
+        self.d = 5                                        # Red dot diameter [um]
 
+        #-------------------- Internal parameters - do not change
+
+        self.background="#202020",                        
         self.scan_run_flag = 0
+        self.last = ''                                  
 
         # Define ktinker variables to be extracted from fields in the GUI
         self.csv_dic_path = tkinter.StringVar()
@@ -234,8 +235,8 @@ class LayoutViewer(tkinter.Frame, lightrig.LightRig):
 
     # ----------- Internal functions linked to buttons for running LightRig -----------
 
-    # Threading function for scanning - required to keep GUI interactve while scanning
     def _scan_on_thread(self):
+        '''Method to thread scan'''
 
         thread = threading.Thread(target=self._scan)
         thread.start()
@@ -245,8 +246,8 @@ class LayoutViewer(tkinter.Frame, lightrig.LightRig):
 
         self.after(1, self._update_comandline, self.latest)
 
-    # Threading function for local optimisation - required to keep GUI interactve while scanning
     def _local_opt_on_thread(self):
+        '''Method to thread local optimisation'''
 
         thread = threading.Thread(target=self._local_opt)
         thread.start()
@@ -256,9 +257,8 @@ class LayoutViewer(tkinter.Frame, lightrig.LightRig):
 
         self.after(1, self._update_comandline, self.latest)
 
-    # Needs to be written and debugged - will basically just call self.scan() passing required variables (see _local_opt below)
     def _scan(self):
-
+        '''Method to call LightRig.scan() when button pushed'''
 
         # Disable buttons
         self.scan_button["state"] = "disabled"
@@ -279,10 +279,9 @@ class LayoutViewer(tkinter.Frame, lightrig.LightRig):
         self.scan_button["state"] = "normal"
         self.local_opt_button["state"] = "normal"
         self.import_csv["state"] = "normal"
-
         
-
     def _local_opt(self):
+        '''Method to call LightRig._local_optimisation() when button pushed'''
 
         # Disable buttons
         self.scan_button["state"] = "disabled"
@@ -303,6 +302,7 @@ class LayoutViewer(tkinter.Frame, lightrig.LightRig):
 
     # Import CSV button
     def _import_cvs(self):
+        '''Method to call LightRig.read_port_CSV() when button pushed'''
 
         # Disable buttons
         self.scan_button["state"] = "disabled"
@@ -318,10 +318,8 @@ class LayoutViewer(tkinter.Frame, lightrig.LightRig):
         self.local_opt_button["state"] = "normal"
         self.import_csv["state"] = "normal"
 
-    # Update canvas video
-    # NOTES - we need to map png pixel size to actual gds coordinates so that we move by the correct amount
-    # This still needs to be done. 
     def _update_canvas(self):
+        '''Method to update canvas with latest fibre array position'''
 
         global new_img, test
 
@@ -402,6 +400,7 @@ class LayoutViewer(tkinter.Frame, lightrig.LightRig):
 
     # Print all log messages continually to the GUI text box
     def _update_comandline(self, message):
+        '''Method to update GUI message box with latest command line output'''
 
         if message == self.last:
             pass
