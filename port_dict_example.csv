@@ -1,0 +1,4 @@
+id,device_name,port_x_position_um,port_y_position_um,number_of_channels,optimisation_channel,wavelength_start_nm,wavelength_stop_nm,steps
+1,struc1,7360,-5628,1,1,1550,1550,1
+2,struc2,6819,-5628,1,1,1550,1550,1
+
