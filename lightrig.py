@@ -68,8 +68,7 @@ THOR_ERRORS = {
 ERRORS = {**QONTROL_ERRORS, **LTP_ERRORS, **LTP_WARNINGS, **THOR_ERRORS}
 
 # Define fatal errors
-fatal_errors = [0]
-# [0, 1, 20, 110, 111, 113, 114, 115, 116, 117, 202]
+fatal_errors = [0, 1, 20, 110, 111, 113, 114, 115, 116, 117, 202]
 
 # Log handler as defined by Qontrol Systems
 def my_log_handler(err_dict):

@@ -137,21 +137,7 @@ class LayoutViewer(tkinter.Frame, lightrig.LightRig):
             self, width=width, height=height, xscrollincrement=0, yscrollincrement=0
         )
         self.canvas.grid(row=0, column=0, sticky="nsew")
-        self.canvas.configure(bg=background)
-        bg = [int(c, 16) for c in (background[1:3], background[3:5], background[5:7])]
-        self.default_outline = "#{0[0]:02x}{0[1]:02x}{0[2]:02x}".format(
-            [(0 if c > 127 else 255) for c in bg]
-        )
-        self.default_grey = "#{0[0]:02x}{0[1]:02x}{0[2]:02x}".format(
-            [
-                (
-                    (c + 256) // 2
-                    if c < 85
-                    else (c // 2 if c > 171 else (255 if c > 127 else 0))
-                )
-                for c in bg
-            ]
-        )
+        self.canvas.configure(bg=self.background)
 
         # Setup toolbar
         self.frame = tkinter.Frame(self)
