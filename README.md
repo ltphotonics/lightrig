@@ -42,8 +42,8 @@ pip install ltphotonics
 The latest development version is available through Github as instructed below.
 
 ```bash
-git clone https://github.com/ltphotonics/ltphotonics.git
-cd ltphotonics/
+git clone https://github.com/ltphotonics/lightrig.git
+cd lightrig/
 ```
 
 Local installation can be performed using the `setup.py` installation script.
