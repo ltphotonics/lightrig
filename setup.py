@@ -21,5 +21,5 @@ setuptools.setup(
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
     ],
-    install_requires=["libusb", "pyvisa-py", "pyusb", "pyserial", "qontrol", "numpy"],
+    install_requires=["libusb", "pyvisa-py", "pyusb", "pyserial", "qontrol", "numpy", "tkinter", "gdspy"],
 )
