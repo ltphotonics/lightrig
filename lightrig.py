@@ -175,11 +175,11 @@ class LightRig(object):
 		
 		# # # Set motor speed to slow - more accurate translations
 		self.qs.set_value(0,'VMAX', 1)
-		# self.qs.set_value(1,'VMAX', 1)
-		# self.qs.set_value(2,'VMAX', 1)
+		self.qs.set_value(1,'VMAX', 1)
+		self.qs.set_value(2,'VMAX', 1)
 		self.qs.set_value(0,'USTEP', 3)
-		# self.qs.set_value(1,'USTEP', 3)
-		# self.qs.set_value(2,'USTEP', 3)
+		self.qs.set_value(1,'USTEP', 3)
+		self.qs.set_value(2,'USTEP', 3)
 		time.sleep(1)
 
 		print ("'{:}' initialised with firmware {:} and {:} channels".format(self.qs.device_id, self.qs.firmware, self.qs.n_chs) )
@@ -321,14 +321,13 @@ class LightRig(object):
 			moved = self._local_optimisation(preferred_pm = int(self.opt_port[idx]), scan_range_um = local_optimisation_scan_range_um)
 
 			# Check coupling threshold has been hit
-			# p_check = self.pms[int(self.opt_port[idx])-1].measure()
-			p_check = 10
+			p_check = self.pms[int(self.opt_port[idx])-1].measure()
 			# p = randrange(10)
 
-			# if self.pms[int(self.opt_port[idx])-1].unit == 'mW':
-			# 	p_check = mW_to_dB(p_check)
-			# elif self.pms[int(self.opt_port[idx])-1].unit == 'W':
-			# 	p_check = mW_to_dB(p_check)*1000
+			if self.pms[int(self.opt_port[idx])-1].unit == 'mW':
+				p_check = mW_to_dB(p_check)
+			elif self.pms[int(self.opt_port[idx])-1].unit == 'W':
+				p_check = mW_to_dB(p_check)*1000
 			
 			# Log info about coupling success
 			self.log_append(type='info', id='-1', params='Max coupling into device {:} = {:.2f} dBm'.format(i, p_check))
@@ -373,25 +372,25 @@ class LightRig(object):
 			# Scan wavelengths and collect data
 			for w in wavelengths:
 				
-				# # set wavelength on laser
-				# if self.laser is None:
-				# 	pass
-				# else:
-				# 	self.laser.set_laser_wavelength(w)
-				# 	self.log_append(type='info', id='-1', params='Laser wavelength set to initial value of {} nm'.format(w))
-				# 	time.sleep(0.2)
+				# set wavelength on laser
+				if self.laser is None:
+					pass
+				else:
+					self.laser.set_laser_wavelength(w)
+					self.log_append(type='info', id='-1', params='Laser wavelength set to initial value of {} nm'.format(w))
+					time.sleep(0.2)
 
 				# Take measurement on each port
 				p = [w]
 
 				for port in range(0,int(self.num_ports[idx])):
 					
-					# p.append(self.pms[port].measure())
-					p.append(randrange(100))
+					p.append(self.pms[port].measure())
+					# p.append(randrange(100))
 
 				device_data = np.vstack((device_data, p))
 				
-			# self.laser.set_laser_wavelength('1550')
+			self.laser.set_laser_wavelength('1550')
 			self.log_append(type='info', id='-1', params='Laser wavelength set to initial value of {} nm'.format('1550'))
 			time.sleep(0.5)
 
@@ -458,32 +457,28 @@ class LightRig(object):
 				# # FOR DEBUGGING WITHOUT M2 PLUGGED IN
 				# X0 = self.current_position[0]
 				# X1 = self.current_position[0] + stop[0]*(self.dudx[u]/self.dudx[0])
-
 				# if X1 - X0 != float(stop[0]*(self.dudx[u]/self.dudx[0])):
 				# 	self.log_append(type='info', id='-1', params='Local optimisation X scan step failed: target move = {:}, X0 = {:}, X1 = {:}'.format(float(stop[0]*(self.dudx[u]/self.dudx[0])), X0, X1))
 
-				# Y0 = self.qs.x[self.dims['Y']]
-				# self.qs.x[self.dims['Y']] = Y0 + float(stop[1]*(self.dudx[u]/self.dudx[0]))
-				# self.qs.wait_until_stopped(t_poll = 0.5)
-				# time.sleep(np.abs(float(stop[1]*(self.dudx[u]/self.dudx[0]))*0.5))
-				# Y1 = self.qs.x[self.dims['Y']]
+				Y0 = self.qs.x[self.dims['Y']]
+				self.qs.x[self.dims['Y']] = Y0 + float(stop[1]*(self.dudx[u]/self.dudx[0]))
+				self.qs.wait_until_stopped(t_poll = 0.5)
+				time.sleep(np.abs(float(stop[1]*(self.dudx[u]/self.dudx[0]))*0.5))
+				Y1 = self.qs.x[self.dims['Y']]
 
 				# # FOR DEBUGGING WITHOUT M2 PLUGGED IN
 				# Y0 = self.current_position[1]
 				# Y1 = self.current_position[1] + stop[1]*(self.dudx[u]/self.dudx[0])
-
-   
 				# if Y1 - Y0 != float(stop[1]*(self.dudx[u]/self.dudx[0])):
 				# 	self.log_append(type='info', id='-1', params='Local optimisation Y scan step failed: target move = {:}, Y0 = {:}, Y1 = {:}'.format(float(stop[0]*(self.dudx[u]/self.dudx[0])), X0, X1))       
                 
 				# Update current position with actual distance moved
-				# self.current_position = np.array([self.current_position[0]+self.dudx[0]*(X0 - X1),self.current_position[1]+self.dudx[0]*(Y1 - Y0)])
-				self.current_position = np.array([self.current_position[0]+self.dudx[0]*(X0 - X1),self.current_position[1]])
+				self.current_position = np.array([self.current_position[0]+self.dudx[0]*(X0 - X1),self.current_position[1]+self.dudx[0]*(Y1 - Y0)])
 
 				# # Measure
-				# _ = self.pms[preferred_pm-1].measure()
-				# measurements.append(_)
-				measurements.append(randrange(100))
+				_ = self.pms[preferred_pm-1].measure()
+				measurements.append(_)
+				# measurements.append(randrange(100))
 
 			# Move back to optimal spot and switch to next ustep
 			p_opt = len(measurements)-np.argmax(measurements)-1
@@ -511,26 +506,23 @@ class LightRig(object):
 				# # FOR DEBUGGING WITHOUT M2 PLUGGED IN
 				# X0 = self.current_position[0]
 				# X1 = self.current_position[0] + move_to[0]*(self.dudx[u]/self.dudx[0])
-
 				# if X1 - X0 != float(move_to[0]*(self.dudx[u]/self.dudx[0])):
 				# 	self.log_append(type='info', id='-1', params='Local optimisation X position step failed: target move = {:}, X0 = {:}, X1 = {:}'.format(float(move_to[0]*(self.dudx[u]/self.dudx[0])), X0, X1))
 
-				# Y0 = self.qs.x[self.dims['Y']]
-				# self.qs.x[self.dims['Y']] = Y0 + float(move_to[1]*(self.dudx[u]/self.dudx[0]))
-				# self.qs.wait_until_stopped(t_poll = 0.5)
-				# time.sleep(np.abs(float(move_to[1]*(self.dudx[u]/self.dudx[0]))*0.5))
-				# Y1 = self.qs.x[self.dims['Y']]
+				Y0 = self.qs.x[self.dims['Y']]
+				self.qs.x[self.dims['Y']] = Y0 + float(move_to[1]*(self.dudx[u]/self.dudx[0]))
+				self.qs.wait_until_stopped(t_poll = 0.5)
+				time.sleep(np.abs(float(move_to[1]*(self.dudx[u]/self.dudx[0]))*0.5))
+				Y1 = self.qs.x[self.dims['Y']]
 
 				# # FOR DEBUGGING WITHOUT M2 PLUGGED IN
 				# Y0 = self.current_position[1]
 				# Y1 = self.current_position[1] + move_to[1]*(self.dudx[u]/self.dudx[0])
-
 				# if Y1 - Y0 != float(move_to[1]*(self.dudx[u]/self.dudx[0])):
 				# 	self.log_append(type='info', id='-1', params='Local optimisation Y position step failed: target move = {:}, Y0 = {:}, Y1 = {:}'.format(float(move_to[1]*(self.dudx[u]/self.dudx[0])), X0, X1))          
                 
 				# Update current position with actual distance moved
-				# self.current_position = np.array([self.current_position[0]+self.dudx[0]*(X0 - X1),self.current_position[1]+self.dudx[0]*(Y1 - Y0)])
-				self.current_position = np.array([self.current_position[0]+self.dudx[0]*(X0 - X1),self.current_position[1]])
+				self.current_position = np.array([self.current_position[0]+self.dudx[0]*(X0 - X1),self.current_position[1]+self.dudx[0]*(Y1 - Y0)])
 
 			# Save move incase of failure
 			if u == 0:
@@ -554,7 +546,6 @@ class LightRig(object):
 		X0 = self.qs.x[self.dims['X']]
 		self.qs.x[self.dims['X']] = X0 + float(XYZ_um[0]/self.dudx[0])
 		self.qs.wait_until_stopped(t_poll = 0.5)
-		print('sleeping for {:} s'.format(np.abs(float(XYZ_um[0]*(self.dudx[3]/self.dudx[0]))*0.5)))
 		time.sleep(np.abs(float(XYZ_um[0]*(self.dudx[3]/self.dudx[0]))*0.2))
 
 		X1 = self.qs.x[self.dims['X']]
@@ -562,21 +553,18 @@ class LightRig(object):
 		# if X1 - X0 != float(XYZ_um[0]/self.dudx[0]):
 		# 	self.log_append(type='info', id='-1', params='Device stepping X position failed: target move = {:}, X0 = {:}, X1 = {:}'.format(float(XYZ_um[0]/self.dudx[0]), X0, X1))
 
-		# Y0 = self.qs.x[self.dims['Y']]
-		# self.qs.x[self.dims['Y']] = Y0 + float(XYZ_um[1]/self.dudx[0])
-		# self.qs.wait_until_stopped(t_poll = 0.5)
-		# time.sleep(np.abs(float(XYZ_um[1]/self.dudx[0]))*0.5)
-
-		# Y1 = self.qs.x[self.dims['Y']]
+		Y0 = self.qs.x[self.dims['Y']]
+		self.qs.x[self.dims['Y']] = Y0 + float(XYZ_um[1]/self.dudx[0])
+		self.qs.wait_until_stopped(t_poll = 0.5)
+		time.sleep(np.abs(float(XYZ_um[1]/self.dudx[0]))*0.2)
+		Y1 = self.qs.x[self.dims['Y']]
 
 		# if Y1 - Y0 != float(XYZ_um[1]/self.dudx[0]):
 		# 	self.log_append(type='info', id='-1', params='Device stepping Y position failed: target move = {:}, Y0 = {:}, Y1 = {:}'.format(float(XYZ_um[1]/self.dudx[0]), Y0, Y1))       
 		
 		# Update current position with actual distance moved
-		# self.current_position = np.array([self.current_position[0]+self.dudx[0]*(X0 - X1),self.current_position[1]+self.dudx[0]*(Y1 - Y0)])
-		
-		self.current_position = np.array([self.current_position[0]+self.dudx[0]*(X0 - X1),self.current_position[1]])
-		
+		self.current_position = np.array([self.current_position[0]+self.dudx[0]*(X0 - X1),self.current_position[1]+self.dudx[0]*(Y1 - Y0)])
+				
 		return
                
 	def log_append (self, type='err', id='', params=''):
