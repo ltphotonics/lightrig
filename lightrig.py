@@ -267,7 +267,6 @@ class LightRig(object):
 
 		self.current_position = np.array([self.port_xs[0],self.port_ys[0]])
 
-
 		return self.device_dict
 
 	def scan(self, local_optimisation_scan_range_um = 10, coupling_threshold_dB = -30, foldername = Path(os.path.realpath(__file__)).parent/'Results'):

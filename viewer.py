@@ -327,11 +327,14 @@ class LayoutViewer(tkinter.Frame, lightrig.LightRig):
             w, h = my_img.size
             center = [-cp_x+w/2, -(-cp_y-h/2)]
 
-            # Deal with edge cases - move dot if we scan into edge
+            # Deal with edge cases - move dot if we scan into edge of window range
             if int(center[1]-window_y/2) < 0:
                 y0 = 0
             else:
-                y0 = int(center[1]-window_y/2)
+                if int(center[1]+window_y/2) >= w:
+                    y0 = w-1-window_y
+                else:
+                    y0 = int(center[1]-window_y/2)
 
             if int(center[1]+window_y/2) >= w:
                 y1 = w-1
@@ -344,7 +347,10 @@ class LayoutViewer(tkinter.Frame, lightrig.LightRig):
             if int(center[0]-window_x/2) < 0:
                 x0 = 0
             else:
-                x0 = int(center[0]-window_x/2)
+                if int(center[0]+window_x/2) >= h:
+                    x0 = h-1-window_x
+                else:
+                    x0 = int(center[0]-window_x/2)
 
             if int(center[0]+window_x/2) >= h:
                 x1 = h - 1
