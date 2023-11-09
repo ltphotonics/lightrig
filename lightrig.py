@@ -652,7 +652,7 @@ class Powermeter(object):
 			self.log_append(type='err', id = 202)
 		
 		# For
-		rm = pyvisa.ResourceManager()
+		rm = pyvisa.ResourceManager('@py')
 		resources = rm.list_resources()
 
 		pm_serial = None
