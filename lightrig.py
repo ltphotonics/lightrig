@@ -188,7 +188,7 @@ class LightRig(object):
 			self.pms = []
 			for model, serial, unit in zip(self.pd_models, self.pd_serials, self.units):
 				try:
-					_ = Powermeter(model, serial, unit)
+					_ = Powermeter(model=model, serial=serial, unit=unit)
 					self.pms.append(_)
 				except:
 					self.log_append(type='err', id='112')
@@ -283,16 +283,15 @@ class LightRig(object):
 
 		# Prepare folder for saving data
 		if os.path.exists(foldername):
-			_ = '_' + timestamp()
-			foldername = foldername/_
+			foldername += f" {timestamp()}"
 
-		# Check folder exsists, if not then make it
+		# Check folder exists, if not then make it
 		try: 
 			os.chdir(foldername)
 		except:
 			os.mkdir(foldername)
 
-		# Check device dictionary exsists
+		# Check device dictionary exists
 		if not self.device_dict:
 			self.log_append(type = 'err', id = '113')
 
@@ -652,7 +651,7 @@ class Powermeter(object):
 			self.log_append(type='err', id = 202)
 		
 		# For
-		rm = pyvisa.ResourceManager()
+		rm = pyvisa.ResourceManager('@py')
 		resources = rm.list_resources()
 
 		pm_serial = None
