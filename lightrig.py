@@ -196,7 +196,7 @@ class LightRig(object):
 		# Setup laser tech
 		if self.laser is None:
 			try:
-				self.laser = Laser(laser_COM_port = self.laser_port_name, channel = self.channel)
+				self.laser = Laser(laser_COM_port = self.laser_port_name, channel = self.laser_channel)
 			except:
 				self.log_append(type='err', id='117')
 
@@ -772,7 +772,7 @@ class Powermeter(object):
 
 class Laser(object):
 
-	def __init__(self):
+	def __init__(self, **kwargs):
 
 		self.laser_COM_port = 1
 		self.channel = 1
@@ -784,13 +784,13 @@ class Laser(object):
 			except KeyError:
 				continue
 
-		rm = visa.ResourceManager()
+		rm = pyvisa.ResourceManager('@py')
 
 		if os.name == 'posix':
-			self.laser = rm.open_resource(serial = '/dev/tty{:}'.format(laser_COM_port))
+			self.laser = rm.open_resource(serial = '/dev/tty{:}'.format(self.laser_COM_port))
 		else:
-			self.laser = rm.open_resource(serial = "ASRL{}::INSTR".format(laser_COM_port))
-
+			# self.laser = rm.open_resource(serial = "ASRL{}::INSTR".format(self.laser_COM_port))
+			self.laser = rm.open_resource(f"ASRL{self.laser_COM_port}::INSTR")
 		self.laser.timeout = 20000
 		self.laser.read_termination = '\r>'
 		self.laser.write_termination = '\r'
