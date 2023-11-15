@@ -1,5 +1,5 @@
 
-from ltphotonics.lightrig import LightRig
+from lightrig import LightRig
 
 if __name__ == '__main__':
 
