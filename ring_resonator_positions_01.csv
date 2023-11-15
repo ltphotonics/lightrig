@@ -1,0 +1,3 @@
+id,device_name,port_x_position_um,port_y_position_um,number_of_channels,optimisation_channel,wavelength_start_nm,wavelength_stop_nm,steps,,,
+1,0,-5979.36857,-3122.32237,1,1,1550,1550,1,,,178.1304348
+2,1,-5819.45423,-3122.17402,1,1,1550,1550,1,,,
