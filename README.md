@@ -60,6 +60,7 @@ List of contributors and authors:
 Light Trace Photonics
 - Jake Biele
 - Dominic Sulway
+- James Blatcher
 
 ### Contributions
 If you want to contribute to this library contact contact@ltphotonics.co.uk
