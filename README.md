@@ -27,9 +27,6 @@ Dependencies
 - `pyserial` is required to connect to an Oscis Mainframe laser.
 - `qontrol` to interfacing with the required Qontrol M2 driver boards (See [Qontrol's website](https://qontrol.co.uk/) for more details).
 - `numpy` is required to perform calculations.
-- `tkinter` is required to run the GUI.
-- `gdspy` is required to run the GUI.
-- `Pillow` is required to run the GUI.
 
 Note, the order in which libusb, pyvisa-py and pyusb are install is important for correct configuration. If you are struggling to connect to the Thorlabs powermeter then type `pyvisa-info` into terminal and check the USB backend is working correctly.
 
