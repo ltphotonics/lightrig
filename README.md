@@ -1,6 +1,6 @@
 # Light Trace Photonics
 
-See [our website](https://www.ltphotonics.co.uk/) for more details (coming soon!)
+See [our website](https://www.ltphotonics.co.uk/) for more details
 
 A Python Library for interfacing with **Light Trace Photonics** hardware. This module lets you control LTP's automated chip testing rig. It provides 
 a main LightRig class which reads in device & measurement information, performs scans, and save data for the user. It also provides two additional classes, one for taking measurements with Thorlabs photodiodes and one for controlling an Osics Mainframe laser. Note, these can be modififed to different laser and phototdiode interfacing if required.
